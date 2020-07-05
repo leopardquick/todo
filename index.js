@@ -5,21 +5,34 @@ app.use(bodyParser.urlencoded({
   extended: true
 }))
 app.use(express.static("public"))
-app.set("view engine","ejs")
+app.set("view engine", "ejs")
 
 
 app.get("/", (req, res) => {
 
   let data = new Date()
-  let currentDay = data.getDay()
-  let day = ""
 
-  if(currentDay == 0 || currentDay == 6 )day = "its weekend"
-  else day = "its weekday"
+  let options = {
+    weekday : "long",
+    day : "numeric",
+    month : "long"
+  }
 
+  let day = data.toLocaleDateString("en-US",options)
 
-  res.render("index" ,{ todayDate:day})
+  res.render("index", {
+    todayDate: day
+  })
 })
+
+app.post("/",(req,res)=>{
+       let {newItem:item} = req.body
+       console.log(item)
+       res.send("submited")
+})
+
+
+
 app.listen(3000, () => {
   console.log("listening at port 3000")
 })
