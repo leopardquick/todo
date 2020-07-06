@@ -1,34 +1,49 @@
 const express = require("express")
-const app = express()
 const bodyParser = require("body-parser")
+const date = require(__dirname+"/date.js")
+
+console.log(date.getDate())
+
+const app = express()
 app.use(bodyParser.urlencoded({
   extended: true
 }))
 app.use(express.static("public"))
 app.set("view engine", "ejs")
 
-
+let item = []
+let work = []
 app.get("/", (req, res) => {
 
-  let data = new Date()
-
-  let options = {
-    weekday : "long",
-    day : "numeric",
-    month : "long"
-  }
-
-  let day = data.toLocaleDateString("en-US",options)
-
   res.render("index", {
-    todayDate: day
+    todayDate: date.getDate(),
+    newListItem:item
   })
 })
 
+app.get("/work",(req,res)=>{
+  res.render("index",{
+    todayDate : "work" ,
+    newListItem : work
+  })
+})
+
+app.get("/about",(req,res)=>{
+  res.render("about")
+})
+
+
+
 app.post("/",(req,res)=>{
-       let {newItem:item} = req.body
-       console.log(item)
-       res.send("submited")
+
+       if(req.body.submit=="work"){
+         work.push(req.body.newItem)
+         res.redirect("/work")
+       }else {
+         item.push(req.body.newItem)
+         res.redirect("/")
+       }
+
 })
 
 
