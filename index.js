@@ -2,7 +2,7 @@ const express = require("express")
 const bodyParser = require("body-parser")
 const date = require(__dirname+"/date.js")
 
-console.log(date.getDate())
+
 
 const app = express()
 app.use(bodyParser.urlencoded({

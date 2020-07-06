@@ -9,6 +9,6 @@ let getDate = () => {
   return day
 }
 
-exports = {
+module.exports = {
   getDate : getDate
 }
