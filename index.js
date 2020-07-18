@@ -1,6 +1,18 @@
 const express = require("express")
 const bodyParser = require("body-parser")
-const date = require(__dirname+"/date.js")
+const mongoose = require("mongoose")
+
+mongoose.connect("mongodb://localhost:27017/todolistDB",{useNewUrlParser: true , useUnifiedTopology: true})
+
+const itemSchema =  mongoose.Schema({
+  name : {
+    type : String
+  }
+})
+
+const  Item =  mongoose.model("Item",itemSchema)
+
+
 
 
 
@@ -11,21 +23,23 @@ app.use(bodyParser.urlencoded({
 app.use(express.static("public"))
 app.set("view engine", "ejs")
 
-let item = []
-let work = []
-app.get("/", (req, res) => {
 
-  res.render("index", {
-    todayDate: date.getDate(),
-    newListItem:item
+app.get("/", (req, res) => {
+  Item.find((err,item)=>{
+    if(err){
+      console.log(err)
+    }else{
+      res.render("index",{
+        todayDate : "Today",
+        newListItem : item
+      })
+    }
   })
+
 })
 
-app.get("/work",(req,res)=>{
-  res.render("index",{
-    todayDate : "work" ,
-    newListItem : work
-  })
+app.get("/:routeName",(req,res)=>{
+  console.log(req.params.routeName);
 })
 
 app.get("/about",(req,res)=>{
@@ -40,10 +54,24 @@ app.post("/",(req,res)=>{
          work.push(req.body.newItem)
          res.redirect("/work")
        }else {
-         item.push(req.body.newItem)
+         const todoItem = new Item({
+           name : req.body.newItem
+         })
+         todoItem.save()
          res.redirect("/")
        }
 
+})
+
+app.post("/delete",(req,res)=>{
+  Item.deleteOne({_id : req.body.checkbox},err=>{
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("sucessfully deleted");
+      res.redirect("/")
+    }
+  })
 })
 
 
