@@ -2,7 +2,9 @@ const express = require("express")
 const bodyParser = require("body-parser")
 const mongoose = require("mongoose")
 
-mongoose.connect("mongodb://localhost:27017/todolistDB",{useNewUrlParser: true , useUnifiedTopology: true})
+mongoose.connect("mongodb+srv://admin-n:dnWY0eyJF76ZqDSA@cluster0.fbqm9.mongodb.net/todolistDB",{useNewUrlParser: true , useUnifiedTopology: true})
+
+
 
 const itemSchema =  mongoose.Schema({
   name : {
@@ -39,7 +41,7 @@ app.get("/", (req, res) => {
 })
 
 app.get("/:routeName",(req,res)=>{
-  console.log(req.params.routeName);
+  const routeName = req.params.routeName
 })
 
 app.get("/about",(req,res)=>{
